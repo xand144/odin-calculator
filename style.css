@@ -1,0 +1,62 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 50px;
+}
+
+#main-container {
+    background-color: #6B6B6B;
+    padding: 10px;
+    border: 3px solid black;
+    border-radius: 5px;
+    width: fit-content;
+    max-width: 900px;
+    height: fit-content;
+    margin: auto;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.buttons.container,
+.keypad.container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#display {
+    background-color: #528278;
+    text-align: right;
+    padding: 5px;
+    border: 3px solid black;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.btn-row {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    width: 20vw;
+    min-width: 1em;
+    height: 10vh;
+    min-height: 1.1em;
+    background-color: #A6A6A6;
+    border-radius: 5px;
+}
+
+button.operator {
+    background-color: #F5C414;
+}
+
+#clear {
+    background-color: #F5421D;
+}
+
+#equals {
+    background-color: #2EAB57;
+}

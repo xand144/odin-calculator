@@ -14,6 +14,10 @@ function divide(a, b) {
     return a / b;
 }
 
-let operand1;
-let operator;
-let operand2;
+function operate(operator, n1, n2) {
+    return operator(n1, n2);
+}
+
+let operator = null;
+let n1 = 0;
+let n2 = 0;
