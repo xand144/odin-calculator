@@ -18,6 +18,15 @@ function operate(operatorSet, n1, n2) {
     return operator(+n1, +n2);
 }
 
+function reset() {
+    operatorSet = null;
+    operatorSymbol = "";
+    n1 = "";
+    n2 = "";
+    operatorDeclared = false;
+    updateDisplay();
+}
+
 let operatorSet = null;
 let operatorSymbol = "";
 let n1 = "";
@@ -30,7 +39,7 @@ const clear = document.querySelector("#clear");
 const equals = document.querySelector("#equals");
 const display = document.querySelector("#display");
 const operation = () => `${n1} ${operatorSymbol} ${n2}`;
-const updateDisplay = () => display.textContent = operation;
+const updateDisplay = () => display.textContent = operation();
 
 operators.forEach(operator => {
     operator.addEventListener("click", e => {
@@ -54,7 +63,25 @@ operators.forEach(operator => {
                     break;
             }
             operatorDeclared = true;
-            display.textContent = operation();
+            updateDisplay();
         }
     })
 })
+
+numbers.forEach(number => {
+    number.addEventListener("click", e => {
+        const digit = /[0-9]/;
+        const num = e.target.id
+                        .split("")
+                        .filter(char => digit.test(char))
+                        .join("");
+        if (operatorDeclared === true) {
+            n2 += num;
+        } else {
+            n1 += num;
+        }
+        updateDisplay();
+    })
+})
+
+clear.addEventListener("click", reset);
