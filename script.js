@@ -27,9 +27,16 @@ function roundIfLongFloat(number) {
     } else return number;
 };
 
+function isZero(number) {
+    const digits = number
+                    .split("")
+                    .filter(char => char.match(/[0-9]/) !== null)
+    return digits.every(digit => digit === "0");
+}
+
 function operate(operator, a, b) {
-    if (b === "") return;
-    if (operator === divide && b === "0") {
+    if (b === "" || b === "-") return;
+    if (operator === divide && isZero(b)) {
         reset();
         display.textContent = "No.";
     } else {
@@ -45,7 +52,7 @@ function reset() {
     operatorSymbol = "";
     n1 = "";
     n2 = "";
-    operatorDeclared = false;
+    currentOperand = 1;
     updateDisplay();
 }
 
@@ -53,7 +60,7 @@ let operatorSet = null;
 let operatorSymbol = "";
 let n1 = "";
 let n2 = "";
-let operatorDeclared = false;
+let currentOperand = 1;
 
 const operators = document.querySelectorAll(".operator");
 const numbers = document.querySelectorAll(".number");
@@ -65,7 +72,8 @@ const updateDisplay = () => display.textContent = operation();
 
 operators.forEach(operator => {
     operator.addEventListener("click", e => {
-        if (n1 !== "" && operatorDeclared === false) {
+        if (n1 === "-") return;
+        if (n1 !== "" && operatorSet === null) {
             switch (e.target.id) {
                 case "addition":
                     operatorSet = add;
@@ -84,9 +92,13 @@ operators.forEach(operator => {
                     operatorSymbol = "÷"
                     break;
             }
-            operatorDeclared = true;
-            updateDisplay();
+            currentOperand = 2;
+        } else if (n1 === "" && e.target.id === "subtraction") {
+            n1 += "-";
+        } else if (n2 === "" && e.target.id === "subtraction") {
+            n2 += "-";
         }
+        updateDisplay();
     })
 })
 
@@ -97,7 +109,7 @@ numbers.forEach(number => {
                         .split("")
                         .filter(char => digit.test(char))
                         .join("");
-        if (operatorDeclared === true) {
+        if (currentOperand === 2) {
             n2 += num;
         } else {
             n1 += num;
