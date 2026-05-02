@@ -14,11 +14,30 @@ function divide(a, b) {
     return a / b;
 }
 
+function roundIfLongFloat(number) {
+    if (!number.toString().includes(".")) return number;
+    const chars = number
+                    .toString()
+                    .split("");
+    const decimalPlaces = chars
+                            .slice(chars.indexOf(".") +1)
+                            .length;
+    if (decimalPlaces > 10) {
+        return Number.parseFloat(number).toFixed(10);
+    } else return number;
+};
+
 function operate(operator, a, b) {
-    const result = operator(+a, +b);
-    reset();
-    n1 = result;
-    updateDisplay();
+    if (b === "") return;
+    if (operator === divide && b === "0") {
+        reset();
+        display.textContent = "No.";
+    } else {
+        const result = operator(+a, +b);
+        reset();
+        n1 = roundIfLongFloat(result);
+        updateDisplay();
+    }
 }
 
 function reset() {
