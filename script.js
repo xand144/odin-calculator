@@ -14,8 +14,11 @@ function divide(a, b) {
     return a / b;
 }
 
-function operate(operatorSet, n1, n2) {
-    return operator(+n1, +n2);
+function operate(operator, a, b) {
+    const result = operator(+a, +b);
+    reset();
+    n1 = result;
+    updateDisplay();
 }
 
 function reset() {
@@ -85,3 +88,5 @@ numbers.forEach(number => {
 })
 
 clear.addEventListener("click", reset);
+
+equals.addEventListener("click", () => operate(operatorSet, n1, n2));
