@@ -29,6 +29,7 @@
 #display {
     background-color: #528278;
     text-align: right;
+    min-height: 73px;
     padding: 5px;
     border: 3px solid black;
     border-radius: 5px;
