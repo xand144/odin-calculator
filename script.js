@@ -34,7 +34,12 @@ function isZero(number) {
     return digits.every(digit => digit === "0");
 }
 
-function operate(operator, a, b) {
+function setOperator(func, symbol) {
+    operatorSet = func;
+    operatorSymbol = symbol;
+}
+
+function operate(operator, a, b, newOp, symbol) {
     if (b === "" || b === "-") return;
     if (operator === divide && isZero(b)) {
         reset();
@@ -44,6 +49,7 @@ function operate(operator, a, b) {
         reset();
         n1 = roundIfLongFloat(result);
         currentOperand = 2;
+        if (arguments.length === 5) setOperator(newOp, symbol);
         updateDisplay();
     }
 }
@@ -74,30 +80,44 @@ const updateDisplay = () => display.textContent = operation();
 operators.forEach(operator => {
     operator.addEventListener("click", e => {
         if (n1 === "-") return;
-        if (n1 !== "" && operatorSet === null) {
+        if (n2 === "" && e.target.id === "subtraction" && operatorSet !== null) {
+            n2 += "-";
+            updateDisplay();
+            return;
+        }
+        if (n1 !== "") {
             switch (e.target.id) {
                 case "addition":
-                    operatorSet = add;
-                    operatorSymbol = "+"
+                    if (operatorSet !== null) {
+                        operate(operatorSet, n1, n2, add, "+");
+                        return;
+                    } else setOperator(add, "+");
                     break;
                 case "subtraction":
-                    operatorSet = subtract;
-                    operatorSymbol = "-";
+                    if (operatorSet !== null) {
+                        operate(operatorSet, n1, n2, subtract, "-");
+                        return;
+                    } else setOperator(subtract, "-");
                     break;
                 case "multiplication":
-                    operatorSet = multiply;
-                    operatorSymbol = "×";
+                    if (operatorSet !== null) {
+                        operate(operatorSet, n1, n2, multiply, "×");
+                        return;
+                    } else setOperator(multiply, "×");
                     break;
                 case "division":
-                    operatorSet = divide;
-                    operatorSymbol = "÷"
+                    if (operatorSet !== null) {
+                        operate(operatorSet, n1, n2, divide, "÷");
+                        return;
+                    } else setOperator(divide, "÷");
                     break;
+                case "equals":
+                    operate(operatorSet, n1, n2);
+                    return;
             }
             currentOperand = 2;
-        } else if (n1 === "" && e.target.id === "subtraction") {
+        } else if (e.target.id === "subtraction") {
             n1 += "-";
-        } else if (n2 === "" && e.target.id === "subtraction") {
-            n2 += "-";
         }
         updateDisplay();
     })
@@ -121,5 +141,3 @@ numbers.forEach(number => {
 })
 
 clear.addEventListener("click", reset);
-
-equals.addEventListener("click", () => operate(operatorSet, n1, n2));
