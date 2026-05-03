@@ -43,6 +43,7 @@ function operate(operator, a, b) {
         const result = operator(+a, +b);
         reset();
         n1 = roundIfLongFloat(result);
+        currentOperand = 2;
         updateDisplay();
     }
 }
@@ -104,6 +105,7 @@ operators.forEach(operator => {
 
 numbers.forEach(number => {
     number.addEventListener("click", e => {
+        if (currentOperand === 2 && operatorSet === null) return;
         const digit = /[0-9]/;
         const num = e.target.id
                         .split("")
