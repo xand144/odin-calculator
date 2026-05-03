@@ -54,10 +54,10 @@ function operate(operator, a, b, newOp, symbol) {
     }
 }
 
-function reset() {
+function reset(n) {
     operatorSet = null;
     operatorSymbol = "";
-    n1 = "";
+    n ? n1 = n : n1 = "";
     n2 = "";
     currentOperand = 1;
     updateDisplay();
@@ -125,14 +125,13 @@ operators.forEach(operator => {
 
 numbers.forEach(number => {
     number.addEventListener("click", e => {
-        if (currentOperand === 2 && operatorSet === null) return;
         const digit = /[0-9]/;
         const num = e.target.id
                         .split("")
                         .filter(char => digit.test(char))
                         .join("");
-        if (currentOperand === 2) {
-            n2 += num;
+        if (currentOperand === 2) { 
+            operatorSet !== null ? n2 += num : reset(num);
         } else {
             n1 += num;
         }
@@ -140,4 +139,4 @@ numbers.forEach(number => {
     })
 })
 
-clear.addEventListener("click", reset);
+clear.addEventListener("click", () => reset());
