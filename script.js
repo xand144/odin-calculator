@@ -216,15 +216,15 @@ const updateDisplay = () => {
 document.addEventListener("keydown", keyboardHandler);
 
 operators.forEach(operator => {
-    operator.addEventListener("click", operatorHandler);
+    operator.addEventListener("mousedown", operatorHandler);
 });
 
 numbers.forEach(number => {
-    number.addEventListener("click", numberHandler);
+    number.addEventListener("mousedown", numberHandler);
 });
 
-decimal.addEventListener("click", decimalHandler);
+decimal.addEventListener("mousedown", decimalHandler);
 
-backspace.addEventListener("click", backspaceHandler);
+backspace.addEventListener("mousedown", backspaceHandler);
 
-clear.addEventListener("click", () => reset());
+clear.addEventListener("mousedown", () => reset());
