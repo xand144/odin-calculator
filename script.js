@@ -154,5 +154,21 @@ decimal.addEventListener("click", e => {
 });
 
 backspace.addEventListener("click", e => {
-
+    if (currentOperand === 2 && operation.type === null) return;
+    if (currentOperand === 1) {
+        operation.n1 = operation.n1.split("")
+                                   .slice(0, -1)
+                                   .join("");
+    } else if (operation.n2 === "") {
+        operation.symbol = operation.symbol.split("")
+                                           .slice(0, -1)
+                                           .join("");
+        operation.type = null;
+        currentOperand = 1;
+    } else {
+        operation.n2 = operation.n2.split("")
+                                   .slice(0, -1)
+                                   .join("");
+    }
+    updateDisplay();
 });
