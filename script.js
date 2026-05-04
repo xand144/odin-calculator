@@ -14,15 +14,51 @@ function divide(a, b) {
     return a / b;
 }
 
-function operatorHandler(e) {
+function keyboardHandler(e) {
+    if (digit.test(e.key)) {
+        numberHandler(e, e.key);
+    }
+    switch (e.key) {
+        case "+":
+            operatorHandler(e, "addition");
+            break;
+        case "-":
+            operatorHandler(e, "subtraction");
+            break;
+        case "*":
+        case "x":
+            operatorHandler(e, "multiplication");
+            break;
+        case "/":
+            operatorHandler(e, "division");
+            break;
+        case "=":
+        case "Enter":
+            operatorHandler(e, "equals");
+            break;
+        case ".":
+            decimalHandler();
+            break;
+        case "Backspace":
+        case "Delete":
+            backspaceHandler();
+            break;
+        case "C":
+            reset();
+            break;
+    }
+}
+
+function operatorHandler(e, key) {
     if (operation.n1 === "-") return;
-    if (operation.n2 === "" && e.target.id === "subtraction" && operation.type !== null) {
+    const input = key ? key : e.target.id;
+    if (operation.n2 === "" && input === "subtraction" && operation.type !== null) {
         operation.n2 += "-";
         updateDisplay();
         return;
     }
     if (operation.n1 !== "") {
-        switch (e.target.id) {
+        switch (input) {
             case "addition":
                 if (operation.type !== null) {
                     operate(operation.type, operation.n1, operation.n2, add, "+");
@@ -52,19 +88,19 @@ function operatorHandler(e) {
                 return;
         }
         currentOperand = 2;
-    } else if (e.target.id === "subtraction") {
+    } else if (input === "subtraction") {
         operation.n1 += "-";
     }
     updateDisplay();
 }
 
-function numberHandler(e) {
-    const digit = /[0-9]/;
-    const num = e.target.id
+function numberHandler(e, key) {
+    let num = e.target.id
                     .split("")
                     .filter(char => digit.test(char))
                     .join("");
-    if (currentOperand === 2) { 
+    if (key) num = key;
+    if (currentOperand === 2) {
         operation.type !== null ? operation.n2 += num : reset(num);
     } else {
         operation.n1 += num;
@@ -164,8 +200,10 @@ const operation = {
     n2: "",
 };
 
+const digit = /[0-9]/;
+
 const operators = document.querySelectorAll(".operator");
-const numbers = document.querySelectorAll(".number");
+const numbers = document.querySelectorAll(".number")
 const clear = document.querySelector("#clear");
 const equals = document.querySelector("#equals");
 const decimal = document.querySelector("#decimal");
@@ -175,6 +213,8 @@ const updateDisplay = () => {
     display.textContent = `${operation.n1} ${operation.symbol} ${operation.n2}`;
 }
 
+document.addEventListener("keydown", keyboardHandler);
+
 operators.forEach(operator => {
     operator.addEventListener("click", operatorHandler);
 });
@@ -183,8 +223,8 @@ numbers.forEach(number => {
     number.addEventListener("click", numberHandler);
 });
 
-clear.addEventListener("click", () => reset());
-
 decimal.addEventListener("click", decimalHandler);
 
 backspace.addEventListener("click", backspaceHandler);
+
+clear.addEventListener("click", () => reset());
