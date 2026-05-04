@@ -52,6 +52,7 @@ button {
 
 button.operator {
     background-color: #F5C414;
+    margin-left: auto;
 }
 
 #clear {
@@ -60,4 +61,5 @@ button.operator {
 
 #equals {
     background-color: #2EAB57;
+    margin-left: auto;
 }

@@ -87,6 +87,8 @@ const operators = document.querySelectorAll(".operator");
 const numbers = document.querySelectorAll(".number");
 const clear = document.querySelector("#clear");
 const equals = document.querySelector("#equals");
+const decimal = document.querySelector("#decimal");
+const backspace = document.querySelector("#delete");
 const display = document.querySelector("#display");
 const operation = () => `${n1} ${operatorSymbol} ${n2}`;
 const updateDisplay = () => display.textContent = operation();
@@ -134,11 +136,19 @@ operators.forEach(operator => {
             n1 += "-";
         }
         updateDisplay();
-    })
-})
+    });
+});
 
 numbers.forEach(number => {
-    number.addEventListener("click", numberHandler)
-})
+    number.addEventListener("click", numberHandler);
+});
 
 clear.addEventListener("click", () => reset());
+
+decimal.addEventListener("click", e => {
+
+});
+
+backspace.addEventListener("click", e => {
+
+});
