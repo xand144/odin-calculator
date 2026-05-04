@@ -14,6 +14,50 @@ function divide(a, b) {
     return a / b;
 }
 
+function operatorHandler(e) {
+    if (operation.n1 === "-") return;
+    if (operation.n2 === "" && e.target.id === "subtraction" && operation.type !== null) {
+        operation.n2 += "-";
+        updateDisplay();
+        return;
+    }
+    if (operation.n1 !== "") {
+        switch (e.target.id) {
+            case "addition":
+                if (operation.type !== null) {
+                    operate(operation.type, operation.n1, operation.n2, add, "+");
+                    return;
+                } else setOperator(add, "+");
+                break;
+            case "subtraction":
+                if (operation.type !== null) {
+                    operate(operation.type, operation.n1, operation.n2, subtract, "-");
+                    return;
+                } else setOperator(subtract, "-");
+                break;
+            case "multiplication":
+                if (operation.type !== null) {
+                    operate(operation.type, operation.n1, operation.n2, multiply, "×");
+                    return;
+                } else setOperator(multiply, "×");
+                break;
+            case "division":
+                if (operation.type !== null) {
+                    operate(operation.type, operation.n1, operation.n2, divide, "÷");
+                    return;
+                } else setOperator(divide, "÷");
+                break;
+            case "equals":
+                operate(operation.type, operation.n1, operation.n2);
+                return;
+        }
+        currentOperand = 2;
+    } else if (e.target.id === "subtraction") {
+        operation.n1 += "-";
+    }
+    updateDisplay();
+}
+
 function numberHandler(e) {
     const digit = /[0-9]/;
     const num = e.target.id
@@ -24,6 +68,40 @@ function numberHandler(e) {
         operation.type !== null ? operation.n2 += num : reset(num);
     } else {
         operation.n1 += num;
+    }
+    updateDisplay();
+}
+
+function decimalHandler(e) {
+    if (currentOperand === 2 && operation.type === null) return;
+    if (currentOperand === 1) {
+        if (operation.n1.match(/[0-9]/) !== null &&
+            operation.n1.match(/\./) === null) {
+            operation.n1 += ".";
+        } else return;
+    } else if (operation.n2.match(/[0-9]/) !== null &&
+               operation.n2.match(/\./) === null) {
+        operation.n2 += ".";
+    }
+    updateDisplay();
+}
+
+function backspaceHandler(e) {
+    if (currentOperand === 2 && operation.type === null) return;
+    if (currentOperand === 1) {
+        operation.n1 = operation.n1.split("")
+                                   .slice(0, -1)
+                                   .join("");
+    } else if (operation.n2 === "") {
+        operation.symbol = operation.symbol.split("")
+                                           .slice(0, -1)
+                                           .join("");
+        operation.type = null;
+        currentOperand = 1;
+    } else {
+        operation.n2 = operation.n2.split("")
+                                   .slice(0, -1)
+                                   .join("");
     }
     updateDisplay();
 }
@@ -98,49 +176,7 @@ const updateDisplay = () => {
 }
 
 operators.forEach(operator => {
-    operator.addEventListener("click", e => {
-        if (operation.n1 === "-") return;
-        if (operation.n2 === "" && e.target.id === "subtraction" && operation.type !== null) {
-            operation.n2 += "-";
-            updateDisplay();
-            return;
-        }
-        if (operation.n1 !== "") {
-            switch (e.target.id) {
-                case "addition":
-                    if (operation.type !== null) {
-                        operate(operation.type, operation.n1, operation.n2, add, "+");
-                        return;
-                    } else setOperator(add, "+");
-                    break;
-                case "subtraction":
-                    if (operation.type !== null) {
-                        operate(operation.type, operation.n1, operation.n2, subtract, "-");
-                        return;
-                    } else setOperator(subtract, "-");
-                    break;
-                case "multiplication":
-                    if (operation.type !== null) {
-                        operate(operation.type, operation.n1, operation.n2, multiply, "×");
-                        return;
-                    } else setOperator(multiply, "×");
-                    break;
-                case "division":
-                    if (operation.type !== null) {
-                        operate(operation.type, operation.n1, operation.n2, divide, "÷");
-                        return;
-                    } else setOperator(divide, "÷");
-                    break;
-                case "equals":
-                    operate(operation.type, operation.n1, operation.n2);
-                    return;
-            }
-            currentOperand = 2;
-        } else if (e.target.id === "subtraction") {
-            operation.n1 += "-";
-        }
-        updateDisplay();
-    });
+    operator.addEventListener("click", operatorHandler);
 });
 
 numbers.forEach(number => {
@@ -149,36 +185,6 @@ numbers.forEach(number => {
 
 clear.addEventListener("click", () => reset());
 
-decimal.addEventListener("click", e => {
-    if (currentOperand === 2 && operation.type === null) return;
-    if (currentOperand === 1) {
-        if (operation.n1.match(/[0-9]/) !== null &&
-            operation.n1.match(/\./) === null) {
-            operation.n1 += ".";
-        } else return;
-    } else if (operation.n2.match(/[0-9]/) !== null &&
-               operation.n2.match(/\./) === null) {
-        operation.n2 += ".";
-    }
-    updateDisplay();
-});
+decimal.addEventListener("click", decimalHandler);
 
-backspace.addEventListener("click", e => {
-    if (currentOperand === 2 && operation.type === null) return;
-    if (currentOperand === 1) {
-        operation.n1 = operation.n1.split("")
-                                   .slice(0, -1)
-                                   .join("");
-    } else if (operation.n2 === "") {
-        operation.symbol = operation.symbol.split("")
-                                           .slice(0, -1)
-                                           .join("");
-        operation.type = null;
-        currentOperand = 1;
-    } else {
-        operation.n2 = operation.n2.split("")
-                                   .slice(0, -1)
-                                   .join("");
-    }
-    updateDisplay();
-});
+backspace.addEventListener("click", backspaceHandler);
