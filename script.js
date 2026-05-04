@@ -14,6 +14,20 @@ function divide(a, b) {
     return a / b;
 }
 
+function numberHandler(e) {
+    const digit = /[0-9]/;
+    const num = e.target.id
+                    .split("")
+                    .filter(char => digit.test(char))
+                    .join("");
+    if (currentOperand === 2) { 
+        operatorSet !== null ? n2 += num : reset(num);
+    } else {
+        n1 += num;
+    }
+    updateDisplay();
+}
+
 function roundIfLongFloat(number) {
     if (!number.toString().includes(".")) return number;
     const chars = number
@@ -124,19 +138,7 @@ operators.forEach(operator => {
 })
 
 numbers.forEach(number => {
-    number.addEventListener("click", e => {
-        const digit = /[0-9]/;
-        const num = e.target.id
-                        .split("")
-                        .filter(char => digit.test(char))
-                        .join("");
-        if (currentOperand === 2) { 
-            operatorSet !== null ? n2 += num : reset(num);
-        } else {
-            n1 += num;
-        }
-        updateDisplay();
-    })
+    number.addEventListener("click", numberHandler)
 })
 
 clear.addEventListener("click", () => reset());
