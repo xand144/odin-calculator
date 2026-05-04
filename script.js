@@ -61,7 +61,7 @@ function operate(operator, a, b, newOp, symbol) {
     } else {
         const result = operator(+a, +b);
         reset();
-        operation.n1 = roundIfLongFloat(result);
+        operation.n1 = roundIfLongFloat(result).toString();
         currentOperand = 2;
         if (arguments.length === 5) setOperator(newOp, symbol);
         updateDisplay();
@@ -150,7 +150,17 @@ numbers.forEach(number => {
 clear.addEventListener("click", () => reset());
 
 decimal.addEventListener("click", e => {
-
+    if (currentOperand === 2 && operation.type === null) return;
+    if (currentOperand === 1) {
+        if (operation.n1.match(/[0-9]/) !== null &&
+            operation.n1.match(/\./) === null) {
+            operation.n1 += ".";
+        } else return;
+    } else if (operation.n2.match(/[0-9]/) !== null &&
+               operation.n2.match(/\./) === null) {
+        operation.n2 += ".";
+    }
+    updateDisplay();
 });
 
 backspace.addEventListener("click", e => {
