@@ -15,7 +15,7 @@ function divide(a, b) {
 }
 
 function keyboardHandler(e) {
-    if (digit.test(e.key)) {
+    if (digit.test(e.key) && !letters.test(e.key)) {
         numberHandler(e, e.key);
     }
     switch (e.key) {
@@ -201,6 +201,7 @@ const operation = {
 };
 
 const digit = /[0-9]/;
+const letters = /[A-Za-z]/
 
 const operators = document.querySelectorAll(".operator");
 const numbers = document.querySelectorAll(".number")
